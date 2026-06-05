@@ -1,0 +1,68 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, 'Times New Roman', serif; background: #f4f6f8; color: #222; line-height: 1.5; }
+a { color: #1a5276; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a5276, #2874a6); }
+.login-box { background: #fff; padding: 2rem; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,.2); }
+.login-box h1 { font-size: 1.1rem; color: #1a5276; margin-bottom: .25rem; }
+.login-box h2 { font-size: .9rem; font-weight: normal; color: #666; margin-bottom: 1.5rem; }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: #1a5276; color: #fff; padding: 1rem 0; flex-shrink: 0; }
+.sidebar .brand { padding: 0 1rem 1rem; border-bottom: 1px solid rgba(255,255,255,.2); margin-bottom: 1rem; }
+.sidebar .brand strong { display: block; font-size: .95rem; }
+.sidebar .brand small { opacity: .8; font-size: .75rem; }
+.sidebar nav a { display: block; padding: .55rem 1rem; color: #ecf0f1; font-size: .9rem; }
+.sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,.15); text-decoration: none; }
+.main { flex: 1; padding: 1.5rem; overflow-x: auto; }
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.topbar h1 { font-size: 1.35rem; color: #1a5276; }
+
+.card { background: #fff; border-radius: 6px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+.stat { background: #fff; padding: 1rem; border-radius: 6px; border-left: 4px solid #1a5276; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.stat strong { display: block; font-size: 1.5rem; color: #1a5276; }
+
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { padding: .6rem .5rem; text-align: left; border-bottom: 1px solid #e0e0e0; }
+th { background: #f8f9fa; font-weight: 600; }
+tr:hover { background: #fafbfc; }
+
+label { display: block; margin-bottom: .25rem; font-size: .85rem; font-weight: 600; }
+input, select, textarea { width: 100%; padding: .5rem; margin-bottom: .85rem; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+textarea { min-height: 80px; resize: vertical; }
+
+.btn { display: inline-block; padding: .45rem .9rem; background: #1a5276; color: #fff !important; border: none; border-radius: 4px; cursor: pointer; font-size: .85rem; text-decoration: none !important; }
+.btn:hover { background: #154360; }
+.btn-sm { padding: .3rem .6rem; font-size: .8rem; }
+.btn-success { background: #1e8449; }
+.btn-success:hover { background: #186a3b; }
+.btn-danger { background: #c0392b; }
+.btn-danger:hover { background: #922b21; }
+.btn-secondary { background: #7f8c8d; }
+.btn-secondary:hover { background: #616a6b; }
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 1rem; }
+.actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+.alert { padding: .75rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+.alert-success { background: #d5f5e3; color: #145a32; }
+.alert-error { background: #fadbd8; color: #78281f; }
+.alert-info { background: #d6eaf8; color: #1a5276; }
+
+.badge { display: inline-block; padding: .15rem .5rem; border-radius: 3px; font-size: .75rem; font-weight: 600; }
+.badge-pending { background: #fdebd0; color: #9a7d0a; }
+.badge-approved { background: #d5f5e3; color: #145a32; }
+.badge-rejected { background: #fadbd8; color: #922b21; }
+
+.print-area { background: #fff; padding: 2rem; max-width: 800px; margin: 0 auto; }
+.print-header { text-align: center; border-bottom: 2px solid #1a5276; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+.print-header h2 { color: #1a5276; }
+@media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .main { padding: 0; }
+    .sidebar { display: none; }
+    .layout { display: block; }
+}

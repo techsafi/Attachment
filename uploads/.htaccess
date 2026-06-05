@@ -1,0 +1,5 @@
+# Prevent direct browsing of uploaded files (use download.php)
+Options -Indexes
+<FilesMatch "\.(php|phtml|php3|php4|php5|phps)$">
+    Require all denied
+</FilesMatch>
