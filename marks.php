@@ -33,10 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $assigned = $pdo->prepare("
-    SELECT s.id, s.reg_no, s.full_name, s.course,
+    SELECT s.id, s.reg_no, s.full_name, crs.name as course,
            m.practical, m.logbook, m.attitude, m.total, m.grade
     FROM assessor_assignments aa
     JOIN students s ON s.id = aa.student_id
+    JOIN courses crs ON crs.id = s.course_id
     LEFT JOIN marks m ON m.student_id = s.id AND m.assessor_id = aa.assessor_id
     WHERE aa.assessor_id = ?
     ORDER BY s.full_name

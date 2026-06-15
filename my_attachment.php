@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/auth.php';
 require_login();
 require_role(['student']);
 
-$studentId = current_user()['student_id'] ?? null;
+$studentId = current_student_id();
 if (!$studentId) {
     flash('error', 'Your account is not linked to a student record. Contact the coordinator.');
     redirect('/Attachment/dashboard.php');

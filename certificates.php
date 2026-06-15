@@ -7,14 +7,20 @@ require_role(['admin', 'coordinator']);
 $pdo = db();
 
 // Students with approved placement, marks >= 50, and both submission types approved
-$sql = "SELECT s.id, s.reg_no, s.full_name, s.course, s.department,"
+// OR students marked as completed by admin
+$sql = "SELECT s.id, s.reg_no, s.full_name, crs.name as course, d.name as department,"
     . " c.name AS company_name, p.start_date, p.end_date,"
-    . " ROUND(AVG(m.total)) AS avg_mark, MAX(m.grade) AS grade"
+    . " ROUND(AVG(m.total)) AS avg_mark, MAX(m.grade) AS grade,"
+    . " COALESCE(sc.is_completed, 0) as is_completed, COALESCE(sc.period_bypassed, 0) as period_bypassed"
     . " FROM students s"
     . " JOIN placements p ON p.student_id = s.id AND p.status = 'approved'"
     . " JOIN companies c ON c.id = p.company_id"
+    . " JOIN courses crs ON crs.id = s.course_id"
+    . " JOIN departments d ON d.id = s.department_id"
     . " JOIN marks m ON m.student_id = s.id"
-    . " WHERE p.end_date <= CURDATE()"
+    . " LEFT JOIN student_completion sc ON sc.student_id = s.id"
+    . " WHERE ("
+    . " (p.end_date <= CURDATE() OR sc.period_bypassed = 1)"
     . " AND EXISTS ("
     . " SELECT 1 FROM submissions sub"
     . " WHERE sub.student_id = s.id"
@@ -27,7 +33,9 @@ $sql = "SELECT s.id, s.reg_no, s.full_name, s.course, s.department,"
     . " AND sub2.submission_type = 'recommendation'"
     . " AND sub2.status = 'approved'"
     . " )"
-    . " GROUP BY s.id, s.reg_no, s.full_name, s.course, s.department, c.name, p.start_date, p.end_date"
+    . " )"
+    . " OR (sc.is_completed = 1)"
+    . " GROUP BY s.id, s.reg_no, s.full_name, crs.name, d.name, c.name, p.start_date, p.end_date, sc.is_completed, sc.period_bypassed"
     . " HAVING avg_mark >= 50";
 $eligible = $pdo->query($sql)->fetchAll();
 

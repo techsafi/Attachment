@@ -5,7 +5,7 @@ require_role(['admin', 'coordinator', 'student']);
 
 $user = current_user();
 if ($user['role'] === 'student') {
-    $studentId = (int) ($user['student_id'] ?? 0);
+    $studentId = current_student_id();
     if ($studentId <= 0) {
         http_response_code(403);
         exit('Access denied');
@@ -19,13 +19,18 @@ if ($user['role'] === 'student') {
 }
 
 $stmt = db()->prepare("
-        SELECT s.*, c.name AS company_name, p.start_date, p.end_date,
-                     ROUND(AVG(m.total)) AS avg_mark, MAX(m.grade) AS grade
+        SELECT s.*, crs.name as course, d.name as department, c.name AS company_name, p.start_date, p.end_date,
+                     ROUND(AVG(m.total)) AS avg_mark, MAX(m.grade) AS grade,
+                     COALESCE(sc.is_completed, 0) AS is_completed,
+                     COALESCE(sc.period_bypassed, 0) AS period_bypassed
         FROM students s
         JOIN placements p ON p.student_id = s.id AND p.status = 'approved'
         JOIN companies c ON c.id = p.company_id
+        JOIN courses crs ON crs.id = s.course_id
+        JOIN departments d ON d.id = s.department_id
         JOIN marks m ON m.student_id = s.id
-        WHERE s.id = ? AND p.end_date <= CURDATE()
+        LEFT JOIN student_completion sc ON sc.student_id = s.id
+        WHERE s.id = ? AND (p.end_date <= CURDATE() OR sc.period_bypassed = 1 OR sc.is_completed = 1)
             AND EXISTS (
                     SELECT 1 FROM submissions sub
                     WHERE sub.student_id = s.id
@@ -38,7 +43,7 @@ $stmt = db()->prepare("
                         AND sub2.submission_type = 'recommendation'
                         AND sub2.status = 'approved'
             )
-        GROUP BY s.id, s.reg_no, s.full_name, s.gender, s.course, s.department, s.phone, s.email, s.year_of_study, c.name, p.start_date, p.end_date
+        GROUP BY s.id, s.reg_no, s.full_name, s.gender, crs.name, d.name, s.phone, s.email, s.level, c.name, p.start_date, p.end_date, sc.is_completed, sc.period_bypassed
         HAVING avg_mark >= 50
 ");
 $stmt->execute([$studentId]);

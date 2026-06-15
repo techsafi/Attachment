@@ -16,9 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'gener
 }
 
 $approved = $pdo->query("
-    SELECT p.id, s.full_name, s.reg_no, s.course, c.name AS company_name, p.start_date, p.end_date
+    SELECT p.id, s.full_name, s.reg_no, crs.name as course, c.name AS company_name, p.start_date, p.end_date
     FROM placements p
     JOIN students s ON s.id = p.student_id
+    JOIN courses crs ON crs.id = s.course_id
     JOIN companies c ON c.id = p.company_id
     WHERE p.status = 'approved'
     ORDER BY s.full_name

@@ -7,24 +7,28 @@ $current = basename($_SERVER['PHP_SELF']);
 $menus = [
     'admin' => [
         ['dashboard.php', 'Dashboard'],
+        ['departments.php', 'Departments & Courses'],
         ['students.php', 'Students'],
         ['companies.php', 'Companies'],
         ['placements.php', 'Placements'],
         ['letters.php', 'Industrial Letters'],
         ['assessors.php', 'Assessors & Marks'],
         ['submissions.php', 'Submissions'],
+        ['student_completion.php', 'Completion Management'],
         ['reports.php', 'Reports'],
         ['certificates.php', 'Certificates'],
         ['users.php', 'Users'],
     ],
     'coordinator' => [
         ['dashboard.php', 'Dashboard'],
+        ['departments.php', 'Departments & Courses'],
         ['students.php', 'Students'],
         ['companies.php', 'Companies'],
         ['placements.php', 'Placements'],
         ['letters.php', 'Industrial Letters'],
         ['assessors.php', 'Assessors & Marks'],
         ['submissions.php', 'Submissions'],
+        ['student_completion.php', 'Completion Management'],
         ['reports.php', 'Reports'],
         ['certificates.php', 'Certificates'],
     ],
@@ -38,6 +42,7 @@ $menus = [
         ['my_attachment.php', 'My Attachment'],
         ['upload.php', 'Upload Documents'],
         ['my_marks.php', 'My Marks'],
+        ['my_certificates.php', 'My Certificates'],
     ],
 ];
 $nav = $menus[$role] ?? [];

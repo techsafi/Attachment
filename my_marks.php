@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/auth.php';
 require_login();
 require_role(['student']);
 
-$studentId = current_user()['student_id'] ?? null;
+$studentId = current_student_id();
 if (!$studentId) redirect('/Attachment/dashboard.php');
 
 $marks = db()->prepare("
@@ -35,7 +35,7 @@ require __DIR__ . '/includes/header.php';
         <?php endforeach; ?>
     </table>
     <?php if ((int) $rows[0]['total'] >= 50): ?>
-        <p style="margin-top:1rem;"><a href="/Attachment/print_certificate.php?student_id=<?= (int) $studentId ?>" class="btn" target="_blank">View Completion Certificate</a></p>
+        <p style="margin-top:1rem;"><a href="/Attachment/my_certificates.php" class="btn">View Completion Certificate</a></p>
     <?php endif; ?>
     <?php else: ?>
     <p>Marks not yet submitted by your assessor.</p>

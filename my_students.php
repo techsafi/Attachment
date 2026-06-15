@@ -5,10 +5,11 @@ require_login();
 require_role(['assessor']);
 
 $stmt = db()->prepare("
-    SELECT s.*, c.name AS company_name, p.start_date, p.end_date,
+    SELECT s.*, crs.name as course, c.name AS company_name, p.start_date, p.end_date,
            m.total, m.grade
     FROM assessor_assignments aa
     JOIN students s ON s.id = aa.student_id
+    JOIN courses crs ON crs.id = s.course_id
     LEFT JOIN placements p ON p.student_id = s.id AND p.status = 'approved'
     LEFT JOIN companies c ON c.id = p.company_id
     LEFT JOIN marks m ON m.student_id = s.id AND m.assessor_id = aa.assessor_id

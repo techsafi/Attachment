@@ -14,9 +14,10 @@ switch ($report) {
     case 'placements':
         $title = 'Placements Report';
         $data = $pdo->query("
-            SELECT s.reg_no, s.full_name, s.course, c.name AS company, p.start_date, p.end_date, p.status
+            SELECT s.reg_no, s.full_name, crs.name as course, c.name AS company, p.start_date, p.end_date, p.status
             FROM placements p
             JOIN students s ON s.id = p.student_id
+            JOIN courses crs ON crs.id = s.course_id
             JOIN companies c ON c.id = p.company_id
             ORDER BY p.status, s.full_name
         ")->fetchAll();
@@ -24,10 +25,11 @@ switch ($report) {
     case 'marks':
         $title = 'Marks Report';
         $data = $pdo->query("
-            SELECT s.reg_no, s.full_name, s.course, u.full_name AS assessor,
+            SELECT s.reg_no, s.full_name, crs.name as course, u.full_name AS assessor,
                    m.practical, m.logbook, m.attitude, m.total, m.grade
             FROM marks m
             JOIN students s ON s.id = m.student_id
+            JOIN courses crs ON crs.id = s.course_id
             JOIN users u ON u.id = m.assessor_id
             ORDER BY s.full_name
         ")->fetchAll();
@@ -44,7 +46,7 @@ switch ($report) {
     default:
         $report = 'students';
         $title = 'Students Report';
-        $data = $pdo->query('SELECT reg_no, full_name, gender, course, department, year_of_study, phone FROM students ORDER BY full_name')->fetchAll();
+        $data = $pdo->query('SELECT s.reg_no, s.full_name, s.gender, crs.name as course, d.name as department, s.level, s.phone FROM students s JOIN courses crs ON crs.id = s.course_id JOIN departments d ON d.id = s.department_id ORDER BY s.full_name')->fetchAll();
 }
 
 require __DIR__ . '/includes/header.php';

@@ -5,12 +5,14 @@ require_role(['admin', 'coordinator']);
 
 $id = (int) ($_GET['id'] ?? 0);
 $stmt = db()->prepare("
-    SELECT l.*, s.full_name, s.reg_no, s.course, s.department,
+    SELECT l.*, s.full_name, s.reg_no, crs.name as course, d.name as department,
            c.name AS company_name, c.address AS company_address, c.contact_person,
            p.start_date, p.end_date
     FROM industrial_letters l
     JOIN placements p ON p.id = l.placement_id
     JOIN students s ON s.id = p.student_id
+    JOIN courses crs ON crs.id = s.course_id
+    JOIN departments d ON d.id = s.department_id
     JOIN companies c ON c.id = p.company_id
     WHERE l.id = ?
 ");

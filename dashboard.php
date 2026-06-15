@@ -6,7 +6,7 @@ require_login();
 $pdo = db();
 $role = current_user()['role'];
 
-if ($role === 'student' && empty(current_user()['student_id'])) {
+if ($role === 'student' && current_student_id() <= 0) {
     flash('error', 'Your account is not linked to a student record. Contact the coordinator.');
 }
 
@@ -26,8 +26,8 @@ if (in_array($role, ['admin', 'coordinator'], true)) {
     $stmt = $pdo->prepare('SELECT COUNT(*) FROM marks WHERE assessor_id = ?');
     $stmt->execute([$uid]);
     $stats['Marks Submitted'] = $stmt->fetchColumn();
-} elseif ($role === 'student' && !empty(current_user()['student_id'])) {
-    $sid = current_user()['student_id'];
+} elseif ($role === 'student' && current_student_id() > 0) {
+    $sid = current_student_id();
     $stmt = $pdo->prepare("SELECT status FROM placements WHERE student_id = ? ORDER BY id DESC LIMIT 1");
     $stmt->execute([$sid]);
     $placement = $stmt->fetchColumn();

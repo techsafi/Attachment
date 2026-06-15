@@ -14,17 +14,36 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    department_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    course_type ENUM('CDACC', 'KNEC') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_course_dept (department_id, name),
+    FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS students (
     id INT AUTO_INCREMENT PRIMARY KEY,
     reg_no VARCHAR(30) NOT NULL UNIQUE,
     full_name VARCHAR(100) NOT NULL,
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
-    course VARCHAR(80) NOT NULL,
-    department VARCHAR(80) NOT NULL,
+    course_id INT NOT NULL,
+    department_id INT NOT NULL,
     phone VARCHAR(20),
     email VARCHAR(80),
     year_of_study VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS companies (
@@ -101,6 +120,19 @@ CREATE TABLE IF NOT EXISTS submissions (
     status ENUM('pending', 'reviewed', 'approved') DEFAULT 'pending',
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS student_completion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    is_completed BOOLEAN DEFAULT FALSE,
+    period_bypassed BOOLEAN DEFAULT FALSE,
+    completed_by INT NOT NULL,
+    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    notes TEXT,
+    UNIQUE KEY unique_completion (student_id),
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (completed_by) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Default password for all demo accounts: password
